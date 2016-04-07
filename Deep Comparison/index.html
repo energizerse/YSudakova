@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="libs.js"></script>
+ 
+</head>
+<body>
+
+  <script>
+
+function deepEqual(a, b) {  
+
+  if (a === b) return true;
+
+  if (a === null || typeof a != "object" ||
+      b === null || typeof b != "object")
+          return false;
+
+// !!!! here is unnessesary comparison by counting number of properties because of inner loops
+
+  if (typeof a == "object" && typeof b == "object"){
+
+    for (var prop1 in a){
+
+
+      for (var prop2 in b){
+
+
+        if (prop1==prop2) {
+        	if (deepEqual(a[prop1], b[prop2])){ return true;} 
+        	else {
+        		return false;
+        	}
+	     }
+      } 
+    }
+
+  }
+
+
+}
+
+var obj = {here: {is: "an"}, object: 2};
+
+console.log(deepEqual(obj, obj));
+// → true
+console.log(deepEqual(obj, {here: 1, object: 2}));
+// → false
+console.log(deepEqual(obj, {here: {is: "an"}, object: 2}));
+// → true
+
+  </script>
+
+   <script src="test.js"></script>
+</body>
+</html>
