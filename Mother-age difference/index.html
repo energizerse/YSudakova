@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="libs.js"></script>
+  <script src="ancestry.js"></script>
+</head>
+<body>
+
+  <script>
+
+var ancestry = JSON.parse(ANCESTRY_FILE);
+var byName = {};
+
+ancestry.forEach(function(person) {
+    byName[person.name] = person;
+});
+
+//Function for calculating difference:
+function year(mother, born_ch) {
+    for (var v in byName) {
+        if (byName[v].name == mother) {
+            return born_ch - byName[v].born;
+        }
+    }
+}
+
+
+var differences = [];
+
+
+//Building array of difference between mothers and children :
+var i = 0;
+for (var n in byName) {
+    if (byName[n].mother !== null) {
+        differences[i] = year(byName[n].mother, byName[n].born);
+        i++;
+    }
+}
+
+//Function for average:
+function average(array) {
+    function plus(a, b) {
+        return a + b;
+    }
+    return array.reduce(plus) / array.length;
+}
+
+//Step for filtering array of difference to avoid undefined values:
+differences = differences.filter(function(a) {
+    return a !== undefined;
+});
+
+console.log(average(differences));
+
+  </script>
+
+   <script src="test.js"></script>
+</body>
+</html>
