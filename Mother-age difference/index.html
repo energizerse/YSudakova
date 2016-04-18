@@ -16,40 +16,22 @@ ancestry.forEach(function(person) {
     byName[person.name] = person;
 });
 
-//Function for calculating difference:
-function year(mother, born_ch) {
-    for (var v in byName) {
-        if (byName[v].name == mother) {
-            return born_ch - byName[v].born;
-        }
-    }
-}
-
-
 var differences = [];
 
 
-//Building array of difference between mothers and children :
-var i = 0;
-for (var n in byName) {
-    if (byName[n].mother !== null) {
-        differences[i] = year(byName[n].mother, byName[n].born);
-        i++;
-    }
-}
+differences = ancestry.map(function(person) {
+    if (byName[person.mother] !== undefined) return person.born - byName[person.mother].born;
+}).filter(function(a) {
+    if (a !== undefined) return a;
+});
 
-//Function for average:
+
 function average(array) {
     function plus(a, b) {
         return a + b;
     }
     return array.reduce(plus) / array.length;
 }
-
-//Step for filtering array of difference to avoid undefined values:
-differences = differences.filter(function(a) {
-    return a !== undefined;
-});
 
 console.log(average(differences));
 
