@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="libs.js"></script>
+  <script src="ancestry.js"></script>
+</head>
+<body>
+
+  <script>
+
+var ancestry = JSON.parse(ANCESTRY_FILE);
+
+
+function average(array) {
+  function plus(a, b) { return a + b; }
+  return array.reduce(plus) / array.length;
+}
+
+
+function getStatistic() {
+	var a = {
+		"16" : [],
+		"17" : [],
+		"18" : [],
+		"19" : [],
+		"20" : [],
+		"21" : []
+	};
+
+	
+    ancestry.map( function(person){
+    	switch (Math.ceil(person.died/100)){
+    	case 16: a["16"].push(person.died - person.born); break;
+		case 17: a["17"].push(person.died - person.born); break;
+		case 18: a["18"].push(person.died - person.born); break;
+		case 19: a["19"].push(person.died - person.born); break;
+		case 20: a["20"].push(person.died - person.born); break;
+		case 21: a["21"].push(person.died - person.born); break;
+	}
+    });
+    
+    
+
+    var resMass = [];
+    for (var i in a){
+    	var s = '';
+    	s += i + ': ' + average(a[i]);
+    	resMass.push(s);
+    }
+    
+    return resMass;
+
+	
+}
+
+
+console.log(getStatistic());
+// → 16: 43.5
+//   17: 51.2
+//   18: 52.8
+//   19: 54.8
+//   20: 84.7
+//   21: 94
+
+
+  </script>
+
+   <script src="test.js"></script>
+</body>
+</html>
