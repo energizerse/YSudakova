@@ -12,46 +12,64 @@
 var ancestry = JSON.parse(ANCESTRY_FILE);
 
 
-function average(array) {
-  function plus(a, b) { return a + b; }
-  return array.reduce(plus) / array.length;
+function age(p) {
+    return p.died - p.born;
 }
 
+function average(array) {
+    function plus(a, b) {
+        return a + b;
+    }
+    if (array.length !== 0) return array.reduce(plus) / array.length;
+}
 
 function getStatistic() {
-	var a = {
-		"16" : [],
-		"17" : [],
-		"18" : [],
-		"19" : [],
-		"20" : [],
-		"21" : []
-	};
 
-	
-    ancestry.map( function(person){
-    	switch (Math.ceil(person.died/100)){
-    	case 16: a["16"].push(person.died - person.born); break;
-		case 17: a["17"].push(person.died - person.born); break;
-		case 18: a["18"].push(person.died - person.born); break;
-		case 19: a["19"].push(person.died - person.born); break;
-		case 20: a["20"].push(person.died - person.born); break;
-		case 21: a["21"].push(person.died - person.born); break;
-	}
+    //Calculate array of centuries (+sorting & +filtering by unique value):
+    var centuries = ancestry.map(function(person) {
+        return Math.ceil(person.died / 100);
+    }).sort().filter(function onlyUnique(value, index, self) {
+        return self.indexOf(value) === index;
     });
-    
-    
 
-    var resMass = [];
-    for (var i in a){
-    	var s = '';
-    	s += i + ': ' + average(a[i]);
-    	resMass.push(s);
+
+    //Bulding array of object {century, lifetimes} and filling only first property century:
+    var mas = [{
+        century: centuries[0],
+        lifetimes: []
+    }];
+    var l = centuries.length;
+    for (i = 1; i < l - 1; i++) {
+        if (centuries[i] > mas[mas.length - 1].century) {
+            mas.push({
+                century: centuries[i],
+                lifetimes: []
+            });
+            l++;
+        }
     }
-    
-    return resMass;
 
-	
+    //Filling lifetimes arrays of ages for each century:
+    for (var j in ancestry) {
+        for (k = 0; k < mas.length; k++) {
+            if ((Math.ceil(ancestry[j].died / 100)) == mas[k].century) {
+                mas[k].lifetimes.push(age(ancestry[j]));
+            }
+        }
+
+    }
+
+
+    //Building result:
+    var resMas = [];
+    for (var r in mas) {
+        var s = '';
+        s = mas[r].century + ": " + average(mas[r].lifetimes);
+        resMas.push(s);
+    }
+
+
+    return resMas;
 }
 
 
