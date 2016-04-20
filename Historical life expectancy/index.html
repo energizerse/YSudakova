@@ -16,60 +16,34 @@ function age(p) {
     return p.died - p.born;
 }
 
-function average(array) {
-    function plus(a, b) {
-        return a + b;
-    }
-    if (array.length !== 0) return array.reduce(plus) / array.length;
-}
 
 function getStatistic() {
+	
+	//Building array of centuries for each person ([ { century: 16, lifetimes: 40 }, ... ]):
+    var array = ancestry.map(function(person) {
+        return {century: Math.ceil(person.died / 100), lifetimes: age(person)};
+    }).sort(function(a, b){return a.century-b.century});
+    
 
-    //Calculate array of centuries (+sorting & +filtering by unique value):
-    var centuries = ancestry.map(function(person) {
-        return Math.ceil(person.died / 100);
-    }).sort().filter(function onlyUnique(value, index, self) {
-        return self.indexOf(value) === index;
-    });
 
-
-    //Bulding array of object {century, lifetimes} and filling only first property century:
-    var mas = [{
-        century: centuries[0],
-        lifetimes: []
-    }];
-    var l = centuries.length;
-    for (i = 1; i < l - 1; i++) {
-        if (centuries[i] > mas[mas.length - 1].century) {
-            mas.push({
-                century: centuries[i],
-                lifetimes: []
-            });
-            l++;
-        }
+	//Calculating average of each centuries and building resulting array:
+    rezMas = [];
+    var sumOfYears = 0; var count =1;
+    for(z =0; z< array.length; z++){
+    	if((array[z+1] !== undefined) && (array[z].century == array[z+1].century)){
+    		count++;
+    		sumOfYears += array[z].lifetimes;
+    	}
+    	else {
+    		sumOfYears += array[z].lifetimes;
+    		rezMas.push(array[z].century + ": " + sumOfYears/count);
+		sumOfYears =0; count =1;
+    	} 
+    	
     }
-
-    //Filling lifetimes arrays of ages for each century:
-    for (var j in ancestry) {
-        for (k = 0; k < mas.length; k++) {
-            if ((Math.ceil(ancestry[j].died / 100)) == mas[k].century) {
-                mas[k].lifetimes.push(age(ancestry[j]));
-            }
-        }
-
-    }
-
-
-    //Building result:
-    var resMas = [];
-    for (var r in mas) {
-        var s = '';
-        s = mas[r].century + ": " + average(mas[r].lifetimes);
-        resMas.push(s);
-    }
-
-
-    return resMas;
+    
+    
+	return rezMas;	
 }
 
 
