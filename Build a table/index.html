@@ -1,0 +1,67 @@
+<!doctype html>
+<script src="mountains.js"></script>
+<script src="13_dom.js"></script>
+
+<style>
+  /* Defines a cleaner look for tables */
+  table  { border-collapse: collapse; }
+  td, th { border: 1px solid black; padding: 3px 8px; }
+  th     { text-align: left; }
+</style>
+
+<body>
+<script>
+function buildTable(data) {
+   //get property names that an object has
+    var keys = Object.keys(data[0]);
+
+    // get the reference for the body
+    var body = document.getElementsByTagName("body")[0];
+
+    // creates a <table> element and a <tbody> element
+    var tbl = document.createElement("table");
+    var tblBody = document.createElement("tbody");
+	
+    //creates header with property names
+    var header = document.createElement("tr");
+    for (var k = 0; k < keys.length; k++) {
+        var headerColumn = document.createElement("th");
+        var hCell = document.createTextNode(keys[k]);
+        headerColumn.appendChild(hCell);
+        header.appendChild(headerColumn);
+    }
+    tblBody.appendChild(header);
+
+
+    // creating table
+    for (var i = 0; i < data.length; i++) {
+        // creates a table row
+        var row = document.createElement("tr");
+
+        for (var j = 0; j < keys.length; j++) {
+
+            // Create a <td> elements for each row and creates text node with property values
+            var cell = document.createElement("td");
+            if (j == 0) var cellText = document.createTextNode(data[i].name);
+            if (j == 1) {
+                var cellText = document.createTextNode(data[i].height);
+                cell.style.textAlign = "right";
+            }
+            if (j == 2) var cellText = document.createTextNode(data[i].country);
+            cell.appendChild(cellText);
+
+            row.appendChild(cell);
+        }
+
+        // add the row to the end of the table body
+        tblBody.appendChild(row);
+    }
+
+    // put the <tbody> in the <table>
+    tbl.appendChild(tblBody);
+    // appends <table> into <body>
+    body.appendChild(tbl);
+}
+    document.body.appendChild(buildTable(MOUNTAINS));
+</script>
+</body>
