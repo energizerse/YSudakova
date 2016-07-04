@@ -1,0 +1,83 @@
+<!doctype html>
+
+<style>
+  img { /* className for the trail elements */
+    position: absolute;
+    height: 50px; width: 50px;
+    border-radius: 3px;
+    background: teal;
+  }
+  body {
+    height: 300px;
+  }
+</style>
+
+<body>
+<script>
+ //Creating images on the page
+
+    var im1 = document.createElement("IMG");
+    im1.setAttribute('src', 'insect1.png');
+    document.body.appendChild(im1);
+    im1.style["z-index"] = 5;
+    im1.style.display = "none";
+
+    var im2 = document.createElement("IMG");
+    im2.setAttribute('src', 'insect2.png');
+    document.body.appendChild(im2);
+    im2.style["z-index"] = 4;
+    im2.style.display = "none";
+
+    var im3 = document.createElement("IMG");
+    im3.setAttribute('src', 'insect3.png');
+    document.body.appendChild(im3);
+    im3.style["z-index"] = 3;
+    im3.style.display = "none";
+
+    var im4 = document.createElement("IMG");
+    im4.setAttribute('src', 'insect4.png');
+    document.body.appendChild(im4);
+    im4.style["z-index"] = 2;
+    im4.style.display = "none";
+
+    var im5 = document.createElement("IMG");
+    im5.setAttribute('src', 'insect5.png');
+    document.body.appendChild(im5);
+    im5.style["z-index"] = 1;
+    im5.style.display = "none";
+
+    //array of images
+    var im_arr = [im1, im2, im3, im4, im5];
+
+    var i = 0;
+    var prevX = 0;
+    var prevY = 0;
+    
+    var increaseIndexCyclically = function(i) {
+        if (i < im_arr.length - 1) 
+            return i + 1;
+        return 0;
+    }
+    
+    addEventListener("mousemove", function(event) {
+        if (Math.sqrt((event.pageX - prevX)*(event.pageX - prevX)+(event.pageY - prevY)*(event.pageY - prevY)) > 50) { // sqrt(dx^2 + dy^2) > 50
+            
+            // change coordianates of the current image:
+            for(var t = im_arr.length - 1; t > 0; t--) {
+                im_arr[t].style.left = im_arr[t-1].style.left;
+                im_arr[t].style.top = im_arr[t-1].style.top;
+            }
+            im_arr[0].style.left = event.pageX + "px";
+            im_arr[0].style.top = event.pageY + "px";
+            
+            // make this image visible:
+            im_arr[i].style.display = "block";
+            
+            // update global values:
+            i = increaseIndexCyclically(i);
+            prevX = event.pageX;
+            prevY = event.pageY;
+        }
+    });
+</script>
+</body>
