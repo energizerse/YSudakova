@@ -1,0 +1,73 @@
+<!doctype html>
+
+<head>
+    <style>
+        ul.tab {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            display: inline-block;
+        }
+        ul.tab li:hover {
+            cursor:default;
+        }
+
+    </style>
+</head>
+
+
+<div id="wrapper">
+    <div data-tabname="one">Tab one</div>
+    <div data-tabname="two">Tab two</div>
+    <div data-tabname="three">Tab three</div>
+</div>
+<script>
+
+	
+    function asTabs(node) {
+
+        var massUL = []; // array of UL tags
+        
+
+        for (var i = 0; i < node.children.length; i++) {
+        	//creating tabs and adding to document
+            var x = document.createElement("UL");
+            var xLi = document.createElement("LI");
+            var xText = document.createTextNode(node.children[i].getAttribute("data-tabname"));
+            document.body.appendChild(x).appendChild(xLi).appendChild(xText);
+            
+            x.className = "tab"; //setting style for tabs with CSS
+        	if (i !== 0) {node.children[i].style.display = "none";} //display first div
+        	else {x.style.backgroundColor = "hsl(120, 100%, 75%)";} //highlight first tab
+        	
+        	massUL.push(x);
+			tabEvent(i, node.getElementsByTagName("DIV").length); //call function for hadnling click on tab
+        }
+        
+        //handling "click on tab" event 
+        function tabEvent(i,l){
+        	document.getElementsByTagName("UL")[i].addEventListener("click", function(){
+        		for (var w = 0; w < l; w++){
+        			if (w == i) {
+        				document.getElementsByTagName("UL")[i].style.backgroundColor = "hsl(120, 100%, 75%)";
+        				node.getElementsByTagName("DIV")[i].style.display = "block";
+        			} else
+        			{
+        				document.getElementsByTagName("UL")[w].style.backgroundColor = "#f1f1f1";
+        				node.getElementsByTagName("DIV")[w].style.display = "none";
+        			}
+        		}
+        	});
+        }
+
+        //replacing tab under divs
+        for (var j= massUL.length-1; j>= 0; j--){
+        	node.insertBefore(massUL[j], node.firstChild);
+        } 
+		
+    }
+    asTabs(document.querySelector("#wrapper"));
+</script>
