@@ -1,0 +1,77 @@
+<!doctype html>
+
+<canvas width="600" height="200"></canvas>
+<script>
+    var cx = document.querySelector("canvas").getContext("2d");
+
+    function tr(x, y) {
+        cx.beginPath();
+        cx.moveTo(x, y);
+        cx.lineTo(x + 25, y - 40);
+        cx.lineTo(x + 50, y - 40);
+        cx.lineTo(x + 75, y);
+        cx.lineTo(x, y);
+        cx.stroke();
+    }
+
+    tr(0, 50);
+
+    function diamond(x, y) {
+        cx.beginPath();
+        cx.moveTo(x, y);
+        cx.lineTo(x - 25, y + 25);
+        cx.lineTo(x, y + 50);
+        cx.lineTo(x + 25, y + 25);
+        cx.lineTo(x, y);
+        cx.fillStyle = "red";
+        cx.fill();
+
+    }
+    diamond(110, 0);
+
+
+    function zigz(x, y, step) {
+        cx.beginPath();
+        cx.moveTo(x, y + step);
+        for (var y = 0; y < 70; y += step) {
+            cx.lineTo(x + 35, y);
+            y += step;
+            cx.lineTo(x, y);
+        }
+        cx.stroke();
+
+    }
+    zigz(150, 0, 5);
+
+
+    function spiral(x, y, r) {
+        var centerX = x + r;
+        var centerY = y + r;
+        cx.beginPath();
+        cx.moveTo(centerX, centerY);
+        for (var i = 0; i < 230; i++) {
+            var angle = i * Math.PI / 30;
+            var dist = r * i / 350;
+            cx.lineTo(centerX + Math.cos(angle) * dist, centerY + Math.sin(angle) * dist);
+        }
+        cx.stroke();
+    }
+    spiral(180, -25, 50);
+
+    function star(x, y, r) {
+        var centerX = x + r;
+        var centerY = y + r;
+        cx.beginPath();
+        cx.moveTo(centerX + r, centerY);
+        for (var i = 1; i <= 10; i++) {
+            var angle = i * Math.PI / 5;
+            cx.quadraticCurveTo(centerX, centerY, centerX + Math.cos(angle) * r, centerY + Math.sin(angle) * r);
+        }
+        cx.fillStyle = "gold";
+        cx.fill();
+    }
+    star(260, 0, 30);
+
+
+    // Your code here.
+</script>
