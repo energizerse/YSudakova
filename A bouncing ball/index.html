@@ -1,0 +1,47 @@
+<!doctype html>
+<script src="15_game.js"></script>
+<script src="game_levels.js"></script>
+<script src="16_canvas.js"></script>
+
+<canvas width="400" height="400"></canvas>
+<script>
+ var cx = document.querySelector("canvas").getContext("2d");
+
+  var lastTime = null;
+  function frame(time) {
+    if (lastTime != null)
+      updateAnimation(Math.min(100, time - lastTime) / 1000);
+    lastTime = time;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  var x = 200;
+  var y = 350;
+  var w = document.querySelector("canvas").width;
+  var h = document.querySelector("canvas").height;
+  var r = 10;
+  var shOfX = 100;
+  var shOfY = 45;
+
+
+  function updateAnimation(step) {
+    cx.clearRect(0, 0, w, h);
+    cx.beginPath();
+    cx.arc(x, y, r, 0, Math.PI*2);
+    cx.fillStyle = "green";
+    cx.fill();
+    
+    if(x  > w - r || x < r) {
+        shOfX = -shOfX;
+    }
+    if(y  > h - r || y < r) {
+        shOfY = -shOfY;
+    }
+    
+    x += shOfX * step;
+    y += shOfY * step;
+
+    cx.closePath();
+  }
+</script>
