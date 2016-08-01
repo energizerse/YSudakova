@@ -1,0 +1,28 @@
+<html>
+<head>
+  <title>Content negotiation</title>
+  <meta charset="utf-8">
+</head>
+<body>
+
+  <button id="btnText">Text</button>
+  <button id="btnHtml">Html</button>
+  <button id="btnJson">Json</button>
+
+
+  <div id='result'></div>
+
+  <script>
+  var sendRequest = function(acceptVal) {
+    var xhttp = new XMLHttpRequest()
+    xhttp.open('GET', 'http://eloquentjavascript.net/author', false)
+    xhttp.setRequestHeader('accept', acceptVal)
+    xhttp.send()
+    document.getElementById('result').innerHTML = xhttp.responseText
+  }
+  document.getElementById("btnText").addEventListener("click", function() {sendRequest('text/plain')})
+  document.getElementById("btnHtml").addEventListener("click", function() {sendRequest('text/html')})
+  document.getElementById("btnJson").addEventListener("click", function() {sendRequest('application/json')})
+  </script>
+</body>
+</html>
