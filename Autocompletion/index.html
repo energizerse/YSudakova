@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>repl.it</title>
+</head>
+<body>
+
+
+
+<input type="text" id="field">
+<div id="suggestions" style="cursor: pointer"></div>
+
+<script>
+  // Builds up an array with global variable names, like
+  // 'alert', 'document', and 'scrollTo'
+  var terms = [];
+  for (var name in window)
+      terms.push(name);
+  
+  // Your code here.
+  
+  //Sort array of window elements
+  terms.sort(function (a, b) {
+    return a.toLowerCase().localeCompare(b.toLowerCase());
+  });
+  
+  var inputField = document.getElementById("field");
+  var newDiv = document.getElementById("suggestions");
+  
+  //Add event for any changes in the input
+  inputField.addEventListener("input", function() {
+      newDiv.innerHTML = '';
+      for (var i = 0; i < terms.length; i++) {
+          if (terms[i].substr(0, inputField.value.length) == inputField.value) {
+              var element = document.createElement("DIV");
+              element.innerHTML = terms[i];
+              newDiv.appendChild(element);
+			  
+			  //Add event for each suggestion
+              element.addEventListener("click", (function(el) {
+                  return function() {
+                      inputField.value = el.innerHTML;
+					  newDiv.innerHTML = '';
+                  };
+              })(element));
+ 
+          }
+      }
+  });
+</script>
+
+</body>
+</html>
