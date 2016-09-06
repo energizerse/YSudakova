@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<title>repl.it</title>
+</head>
+<body>
+
+
+<textarea id="code">return 1;</textarea>
+<button id="button">Run</button>
+<pre id="output"></pre>
+
+<script>
+	document.getElementById("button").addEventListener("click", function() {
+	var textCode = document.getElementById("code").value;
+    var textField = document.getElementById("output");
+    try {
+      var res = new Function("",textCode)();
+      textField.textContent = "Result of your code: " + String(res);
+      textField.style.color = "green";
+    } catch (e) {
+      textField.textContent = "The entered code contains an error: " + e;
+      textField.style.color = "red";
+    }
+  });
+
+</script>
+
+
+</body>
+</html>
