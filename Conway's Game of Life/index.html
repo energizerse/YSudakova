@@ -1,0 +1,150 @@
+<!doctype html>
+<script src="code/promise.js"></script>
+
+<div id="grid"></div>
+<button id="next">Next generation</button>
+
+<script>
+
+const ALIVE = true;
+const DEAD = false;
+
+var grid = [];
+var n = 20;
+
+function initializeGrid() {
+    var grid = new Array(n);
+
+    for (var i = 0; i < n; i++) {
+        grid[i] = [];
+        for (var j =0 ; j < n; j++) {
+            grid[i][j] = (Math.round(Math.random()) == 1) ? ALIVE : DEAD;
+            //grid[i][j] = DEAD;
+        }
+    }
+
+    return grid;
+}
+
+function recalculateGrid(grid) {
+    // create new matrix and fill by zeros:
+    var newGrid = new Array(n);
+    for(var i = 0; i < n; i++) {
+        newGrid[i] = new Array(n);
+        for(var j = 0; j < n; j++) {
+            newGrid[i][j] = 0;
+        }
+    }
+
+    // count neighbours
+    for (var i = 0; i < n; i++) {
+        for (var j = 0; j < n; j++) {
+            if (grid[i][j] == ALIVE) {
+                if(i != 0 && j != 0) {
+                    newGrid[i-1][j-1]++;
+                }
+                if (i != 0) {
+                    newGrid[i-1][j]++;
+                }
+                if(i != 0 && j != n -1) {
+                    newGrid[i - 1][j + 1]++;
+                }
+                if(j != n -1) {
+                    newGrid[i][j + 1]++;
+                }
+                if (i != n-1 && j != n - 1) {
+                    newGrid[i+1][j+1]++;
+                }
+                if(i != n-1) {
+                    newGrid[i+1][j]++;
+                }
+                if(i != n -1 && j != 0) {
+                    newGrid[i+1][j-1]++;
+                }
+                if(j != 0) {
+                    newGrid[i][j-1]++;
+                }
+            }
+        }
+    }
+
+    //set status of a cell
+    for (var i = 0; i < n; i++) {
+        for (var j = 0; j < n; j++) {
+            if (grid[i][j] == ALIVE && (2 == newGrid[i][j] || newGrid[i][j] == 3)) {
+                newGrid[i][j] = ALIVE;
+            } else if(grid[i][j] == DEAD && newGrid[i][j] == 3) {
+                newGrid[i][j] = ALIVE;
+            } else {
+                newGrid[i][j] = DEAD;
+            }
+        }
+    }
+
+    return newGrid;
+}
+
+function renderGrid(grid) {
+    var cellsDev = document.getElementById("grid");
+    cellsDev.innerHTML = '';
+    var table = document.createElement('TABLE');
+    table.setAttribute("id", "tableGrid");
+    table.border='1';
+    var tableBody = document.createElement('TBODY');
+    table.appendChild(tableBody);
+
+    for (var i = 0; i < n; i++){
+        var tr = document.createElement('TR');
+        tableBody.appendChild(tr);
+
+        for (var j =0 ; j < n; j++){
+            var td = document.createElement('TD');
+            td.width='10';
+            td.height='10';
+
+            var checkBox = document.createElement('INPUT');
+            checkBox.setAttribute('type', 'checkbox');
+            if(grid[i][j] == ALIVE) {
+                td.style['background-color'] = 'red';
+                checkBox.setAttribute('checked', 'checked');
+            }
+
+            td.appendChild(checkBox);
+            tr.appendChild(td);
+        }
+        cellsDev.appendChild(table);
+    }
+}
+
+function getNewGrid() {
+    var table = document.getElementById('tableGrid');
+
+    var newGrid = new Array(n);
+    for(var i = 0; i < n; i++) {
+        newGrid[i] = new Array(n);
+        for(var j = 0; j < n; j++) {
+            var checkBox = table.rows[i].cells[j].childNodes[0];
+            if(checkBox.checked) {
+                newGrid[i][j] = ALIVE;
+            } else {
+                newGrid[i][j] = DEAD;
+            }
+        }
+    }
+
+    return newGrid;
+}
+
+document.getElementById("next").addEventListener("click", function() {
+    var newGrid = getNewGrid();
+    grid = recalculateGrid(newGrid);
+    renderGrid(grid);
+});
+
+(function() {
+    grid = initializeGrid();
+    renderGrid(grid);
+})();
+
+
+</script>
