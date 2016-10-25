@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+ <head>
+  <meta charset="utf-8">
+  <title></title>
+ </head> 
+
+ <body>
+  <select id="list">
+  </select> 
+  <br>
+
+  <textarea id="fileContent" name="comment" form="usrform">Enter text here...</textarea>
+  <br>
+   
+    <button type="button" id="saveBtn">Save</button> 
+
+
+  <script>
+  //To send request to the server
+  var sendRequest = function(httpMethod, url, data) {
+    var xhttp = new XMLHttpRequest()
+    xhttp.open(httpMethod, url, false)
+    if (data) {
+    xhttp.send(data);}
+    else {xhttp.send();}
+    return xhttp.responseText;
+  }
+
+  // To add list of files to select tag as options
+  var loadFileList = function(){
+    var filenames = sendRequest('GET','http://localhost:8000/').split("\n");
+    filenames.forEach(function(name){
+      var select = document.createElement("OPTION");
+      select.setAttribute("value", name);
+      select.innerHTML = name;
+      document.getElementById("list").appendChild(select);
+    })
+  }
+  loadFileList();
+
+// To open first file in textarea by default
+  if (document.getElementsByTagName("OPTION")[0]) {
+  document.getElementById("fileContent").value = sendRequest('GET','http://localhost:8000/'+document.getElementsByTagName("OPTION")[0].value);
+}
+    //To handle event of choosing file
+  document.getElementById("list").addEventListener("change",function(){
+    document.getElementById("fileContent").value = sendRequest('GET','http://localhost:8000/'+document.getElementById("list").value);
+  });
+  
+    //To save your changes of current file
+   document.getElementById("saveBtn").addEventListener("click", function(){
+    if (document.getElementById("list").value == 'index.html' || document.getElementById("list").value == 'myNodeJS.js') {alert("No! You can not change this file!"); }
+    else {    
+    sendRequest('PUT','http://localhost:8000/' + document.getElementById("list").value, document.getElementById("fileContent").value);};
+   })
+  </script>
+ </body>
+</html>
